@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>STANDARD — Be the Bank</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Familjen+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0a0b0d; --vault:#15130e; --vault2:#1d1a12;
+    --paper:#e8dcc0; --paper2:#d8c9a4;
+    --gold:#e8b64a; --gold-deep:#a67c1e; --gold-lo:#5e4712;
+    --mint:#3fb794; --mint-deep:#1f7a5f;
+    --alarm:#e5482f; --alarm-deep:#8f2416;
+    --line:#332d1f; --dim:#8a8266; --dim2:#6b6450;
+    --disp:'Fraunces',Georgia,serif;
+    --ui:'Familjen Grotesk',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:var(--ui); color:var(--paper); overflow:hidden;
+    background:radial-gradient(120% 80% at 50% -10%, #23200f 0%, var(--ink) 55%), var(--ink);
+    transition:background .8s;
+  }
+  .num{font-family:var(--disp); font-variant-numeric:tabular-nums; letter-spacing:-.01em;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.04;z-index:0;
+    background-image:repeating-radial-gradient(circle at 50% 40%, transparent 0 6px, var(--gold) 6px 7px);}
+  .stage{position:relative;z-index:1;max-width:480px;margin:0 auto;height:100vh;height:100dvh;
+    display:flex;flex-direction:column;padding:14px 14px 18px;}
+
+  .mast{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+  .seal{display:flex;align-items:center;gap:10px;}
+  .seal .ring{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--gold);display:grid;place-items:center;
+    color:var(--gold);font-family:var(--disp);font-weight:900;font-size:17px;box-shadow:inset 0 0 0 3px rgba(232,182,74,.15);}
+  .seal .wm{font-family:var(--disp);font-weight:600;font-size:15px;letter-spacing:.14em;}
+  .seal .wm small{display:block;font-family:var(--ui);font-size:9px;letter-spacing:.22em;color:var(--dim);font-weight:500;}
+  .charterNo{text-align:right;font-size:10px;color:var(--dim);letter-spacing:.12em;line-height:1.5;}
+  .charterNo b{color:var(--gold);font-family:var(--disp);}
+
+  .cert{background:linear-gradient(160deg,var(--paper) 0%, var(--paper2) 100%);color:#2a2413;border-radius:14px;
+    padding:14px 18px;margin-bottom:12px;position:relative;overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,.5), inset 0 0 0 1px rgba(255,255,255,.25), inset 0 0 0 3px rgba(120,90,20,.25);}
+  .cert::after{content:"";position:absolute;inset:5px;border:1px solid rgba(120,90,20,.35);border-radius:9px;pointer-events:none;}
+  .cert .row{display:flex;justify-content:space-between;align-items:flex-end;position:relative;z-index:1;}
+  .cert .cap{font-size:10px;letter-spacing:.18em;color:#7a5f24;text-transform:uppercase;font-weight:600;}
+  .cert .bal{font-family:var(--disp);font-weight:900;font-size:44px;line-height:.92;color:#2a2413;}
+  .cert .bal .cur{font-size:22px;font-weight:600;vertical-align:top;margin-right:2px;color:#7a5f24;}
+  .cert .sub{font-size:11px;color:#6b551f;margin-top:3px;}
+  .cert .side{text-align:right;}
+  .cert .side .k{font-size:10px;letter-spacing:.14em;color:#7a5f24;text-transform:uppercase;}
+  .cert .side .v{font-family:var(--disp);font-weight:600;font-size:26px;color:#2a2413;line-height:1;}
+  .bal.bump{animation:bump .35s cubic-bezier(.2,1.6,.4,1);}
+  @keyframes bump{0%{transform:scale(1);}40%{transform:scale(1.09);}100%{transform:scale(1);}}
+
+  .weather{border-radius:11px;padding:9px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px;
+    font-size:13px;border:1px solid var(--line);transition:background .6s,border-color .6s;background:var(--vault);}
+  .weather .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;box-shadow:0 0 10px currentColor;}
+  .weather b{font-weight:700;}
+
+  .vaultbox{flex:1;position:relative;border-radius:16px;overflow:hidden;margin-bottom:12px;min-height:220px;
+    background:radial-gradient(90% 70% at 50% 30%, var(--vault2), var(--vault));border:1px solid var(--line);
+    box-shadow:inset 0 2px 20px rgba(0,0,0,.6), inset 0 0 0 1px rgba(232,182,74,.06);}
+  .vaultbox .tag{position:absolute;top:10px;left:0;right:0;text-align:center;font-size:9px;letter-spacing:.3em;color:var(--dim2);pointer-events:none;z-index:2;}
+  .vaultbox::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46px;pointer-events:none;
+    background:linear-gradient(180deg,transparent,rgba(0,0,0,.4));
+    border-top:1px solid rgba(232,182,74,.08);}
+  .vaultbox::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+    background:radial-gradient(60% 40% at 50% 42%, rgba(232,182,74,.10), transparent 70%);}
+  .grid{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;padding:40px 22px 34px;}
+  .branches{display:flex;flex-wrap:wrap;gap:13px;justify-content:center;align-content:flex-end;max-width:100%;}
+
+  .branch{width:44px;height:60px;position:relative;animation:grow .45s cubic-bezier(.16,1.5,.4,1);}
+  .branch .body{position:absolute;bottom:0;width:100%;height:44px;border-radius:3px;
+    background:linear-gradient(180deg,#f0d38a 0%, var(--gold) 40%, var(--gold-deep) 100%);
+    box-shadow:0 3px 0 var(--gold-lo), 0 5px 12px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.5);}
+  .branch .roof{position:absolute;top:8px;left:-3px;right:-3px;height:12px;
+    background:linear-gradient(180deg,#f5dc94,var(--gold-deep));clip-path:polygon(50% 0,100% 100%,0 100%);
+    filter:drop-shadow(0 2px 2px rgba(0,0,0,.4));}
+  .branch .cols{position:absolute;bottom:6px;left:6px;right:6px;height:30px;
+    background:repeating-linear-gradient(90deg,transparent 0 4px,rgba(94,71,18,.4) 4px 6px);}
+  .branch .mark{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-family:var(--disp);font-weight:900;color:var(--gold-lo);font-size:15px;}
+  .branch.pulse .body{animation:earn .8s ease;}
+  @keyframes earn{0%,100%{box-shadow:0 3px 0 var(--gold-lo),0 5px 12px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.5);}
+    50%{box-shadow:0 3px 0 var(--gold-lo),0 5px 22px rgba(232,182,74,.7),inset 0 1px 0 rgba(255,255,255,.5);}}
+  .branch.dying{animation:collapse .55s cubic-bezier(.5,0,.7,.3) forwards;}
+  @keyframes grow{0%{transform:translateY(24px) scale(.4);opacity:0;}100%{transform:translateY(0) scale(1);opacity:1;}}
+  @keyframes collapse{0%{transform:scale(1);opacity:1;}30%{transform:translateY(-6px) rotate(-3deg);}100%{transform:translateY(40px) scale(.3) rotate(8deg);opacity:0;}}
+  .empty{color:var(--dim2);font-family:var(--disp);font-style:italic;font-size:15px;}
+
+  .coin{position:absolute;pointer-events:none;font-family:var(--disp);font-weight:900;font-size:19px;z-index:6;
+    text-shadow:0 2px 6px rgba(0,0,0,.6);animation:coinrise 1.1s cubic-bezier(.3,.7,.4,1) forwards;}
+  @keyframes coinrise{0%{transform:translateY(6px) scale(.7);opacity:0;}18%{opacity:1;transform:translateY(-2px) scale(1.05);}100%{transform:translateY(-72px) scale(1);opacity:0;}}
+
+  .reserve{margin-bottom:14px;}
+  .reserve .head{display:flex;justify-content:space-between;font-size:10px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;margin-bottom:5px;}
+  .reserve .track{height:9px;background:#241f14;border-radius:6px;overflow:hidden;box-shadow:inset 0 1px 3px rgba(0,0,0,.6);}
+  .reserve .fill{height:100%;width:0;border-radius:6px;transition:width .5s cubic-bezier(.3,.8,.4,1);
+    background:linear-gradient(90deg,var(--gold-deep),var(--gold));box-shadow:0 0 12px rgba(232,182,74,.5);}
+
+  .controls{display:flex;gap:11px;margin-bottom:9px;}
+  .ctrl{flex:1;border:none;border-radius:14px;padding:15px 10px 13px;font-family:var(--ui);cursor:pointer;
+    position:relative;text-align:center;transition:transform .07s,filter .2s;color:#fff;
+    box-shadow:0 5px 0 rgba(0,0,0,.45),0 8px 18px rgba(0,0,0,.4);}
+  .ctrl:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.45);}
+  .ctrl:disabled{filter:grayscale(.7) brightness(.6);cursor:not-allowed;}
+  .ctrl .ic{font-size:20px;display:block;margin-bottom:3px;}
+  .ctrl .t{font-family:var(--disp);font-weight:600;font-size:16px;display:block;letter-spacing:.01em;}
+  .ctrl .s{font-size:11px;opacity:.82;display:block;margin-top:3px;min-height:14px;}
+  .ctrl.grow{background:linear-gradient(180deg,var(--mint),var(--mint-deep));box-shadow:0 5px 0 #10513c,0 8px 18px rgba(0,0,0,.4);}
+  .ctrl.grow:active{box-shadow:0 1px 0 #10513c;}
+  .ctrl.cash{background:linear-gradient(180deg,var(--gold),var(--gold-deep));color:#2a2413;box-shadow:0 5px 0 var(--gold-lo),0 8px 18px rgba(0,0,0,.4);}
+  .ctrl.cash:active{box-shadow:0 1px 0 var(--gold-lo);}
+
+  .tip{text-align:center;font-size:12.5px;color:var(--dim);min-height:38px;line-height:1.45;padding:2px 6px;
+    display:flex;align-items:center;justify-content:center;transition:color .3s;}
+  .tip b{color:var(--paper);}
+
+  .overlay{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:26px;
+    background:radial-gradient(90% 70% at 50% 20%, rgba(35,32,15,.97), rgba(8,9,11,.98));backdrop-filter:blur(6px);
+    overflow-y:auto;}
+  .panel{max-width:380px;text-align:center;animation:panelin .5s cubic-bezier(.2,1,.4,1);padding:20px 0;}
+  @keyframes panelin{0%{transform:translateY(16px) scale(.97);opacity:0;}100%{transform:translateY(0) scale(1);opacity:1;}}
+  .panel .bigseal{width:74px;height:74px;border-radius:50%;margin:0 auto 18px;display:grid;place-items:center;
+    border:2px solid var(--gold);color:var(--gold);font-family:var(--disp);font-weight:900;font-size:34px;
+    box-shadow:inset 0 0 0 5px rgba(232,182,74,.14),0 0 40px rgba(232,182,74,.25);}
+  .kicker{font-size:11px;letter-spacing:.28em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;font-weight:600;}
+  .panel h1{font-family:var(--disp);font-weight:900;font-size:38px;line-height:1.02;margin-bottom:10px;}
+  .panel p{color:var(--dim);line-height:1.62;font-size:14.5px;margin-bottom:24px;}
+  .panel p b{color:var(--paper);font-weight:600;}
+  .rules{text-align:left;background:var(--vault);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:24px;}
+  .rules li{list-style:none;display:flex;gap:11px;align-items:flex-start;font-size:13.5px;line-height:1.4;margin-bottom:11px;}
+  .rules li:last-child{margin-bottom:0;}
+  .rules .ri{font-size:19px;flex-shrink:0;line-height:1.1;}
+  .rules .rt{color:var(--dim);}
+  .rules .rt b{color:var(--paper);}
+  .go{background:linear-gradient(180deg,var(--gold),var(--gold-deep));color:#2a2413;border:none;border-radius:13px;
+    padding:16px 40px;font-family:var(--disp);font-weight:600;font-size:18px;cursor:pointer;letter-spacing:.01em;
+    box-shadow:0 5px 0 var(--gold-lo),0 10px 24px rgba(232,182,74,.25);transition:transform .07s;}
+  .go:active{transform:translateY(4px);box-shadow:0 1px 0 var(--gold-lo);}
+  .pill{display:inline-block;font-size:11px;letter-spacing:.16em;padding:5px 14px;border-radius:20px;margin-bottom:16px;text-transform:uppercase;font-weight:600;}
+  .scoreline{font-family:var(--disp);font-weight:900;font-size:52px;color:var(--gold);line-height:1;margin-bottom:6px;}
+  .scoretag{font-size:11px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin-bottom:22px;}
+  .maplink{margin-top:18px;font-size:12px;color:var(--dim2);cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+
+  /* explainer screen */
+  .explain{max-width:440px;text-align:left;animation:panelin .5s cubic-bezier(.2,1,.4,1);padding:8px 0 30px;}
+  .explain .top{text-align:center;margin-bottom:22px;}
+  .explain h1{font-family:var(--disp);font-weight:900;font-size:30px;margin-bottom:6px;text-align:center;}
+  .explain .lead{color:var(--dim);font-size:14px;line-height:1.55;text-align:center;margin-bottom:4px;}
+  .qa{background:var(--vault);border:1px solid var(--line);border-radius:12px;padding:15px 17px;margin-bottom:12px;}
+  .qa .q{font-family:var(--disp);font-weight:600;font-size:16px;color:var(--gold);margin-bottom:7px;display:flex;gap:9px;align-items:baseline;}
+  .qa .q .n{font-size:13px;color:var(--dim2);flex-shrink:0;}
+  .qa .a{font-size:14px;line-height:1.6;color:var(--paper);}
+  .qa .a b{color:var(--gold);font-weight:600;}
+  .qa .a em{color:var(--mint);font-style:normal;font-weight:600;}
+  .qa .a .bad{color:var(--alarm);font-weight:600;font-style:normal;}
+  .tieback{background:linear-gradient(160deg,rgba(232,182,74,.1),var(--vault));border:1px solid rgba(232,182,74,.3);
+    border-radius:12px;padding:16px 18px;margin:18px 0 22px;}
+  .tieback .h{font-family:var(--disp);font-weight:600;font-size:15px;color:var(--gold);margin-bottom:8px;}
+  .tieback p{font-size:13.5px;line-height:1.62;color:var(--paper);margin-bottom:10px;}
+  .tieback p:last-child{margin-bottom:0;}
+  .tieback b{color:var(--gold);font-weight:600;}
+  .simtag{display:inline-block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--mint);
+    border:1px solid var(--mint-deep);border-radius:20px;padding:4px 11px;margin-bottom:14px;}
+
+  .shake{animation:shake .45s;}
+  @keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-7px);}40%{transform:translateX(6px);}60%{transform:translateX(-4px);}80%{transform:translateX(3px);}}
+  .runflash{animation:runflash .8s ease;}
+  @keyframes runflash{0%,100%{background:radial-gradient(90% 70% at 50% 30%, var(--vault2), var(--vault));}30%{background:radial-gradient(90% 70% at 50% 30%, rgba(229,72,47,.35), var(--vault));}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="mast">
+    <div class="seal">
+      <div class="ring">S</div>
+      <div class="wm">STANDARD<small>THE BANK IS CODE</small></div>
+    </div>
+    <div class="charterNo">CHARTER № <b id="charterNo">0847</b><br>SESSION <span id="day" class="num">01</span></div>
+  </div>
+
+  <div class="cert">
+    <div class="row">
+      <div>
+        <div class="cap">Banker's balance</div>
+        <div class="bal num" id="cash"><span class="cur">$</span>0</div>
+        <div class="sub" id="rateLine">earning while branches stand</div>
+      </div>
+      <div class="side">
+        <div class="k">Branches</div>
+        <div class="v num" id="branchCount">1</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="weather" id="weather">
+    <span class="dot" id="wdot" style="color:var(--mint)"></span>
+    <span id="wtext">Reading the market…</span>
+  </div>
+
+  <div class="vaultbox" id="vaultbox">
+    <div class="tag">— YOUR BANK —</div>
+    <div class="grid"><div class="branches" id="branches"></div></div>
+  </div>
+
+  <div class="reserve">
+    <div class="head"><span>Accrued in vault</span><span id="reservePct" class="num">0%</span></div>
+    <div class="track"><div class="fill" id="reserveFill"></div></div>
+  </div>
+
+  <div class="controls">
+    <button class="ctrl grow" id="growBtn" onclick="grow()">
+      <span class="ic">🏛️</span><span class="t">Open branch</span><span class="s" id="growCost">cost $100</span>
+    </button>
+    <button class="ctrl cash" id="cashBtn" onclick="cashOut()">
+      <span class="ic">💰</span><span class="t">Cash out</span><span class="s" id="cashInfo">retire a branch</span>
+    </button>
+  </div>
+
+  <div class="tip" id="tip">Tap <b>Open branch</b> to grow. Every branch pays you, second after second.</div>
+</div>
+
+<div class="overlay" id="intro">
+  <div class="panel">
+    <div class="bigseal">S</div>
+    <div class="kicker">A game about a bank made of code</div>
+    <h1>STANDARD</h1>
+    <p>You hold a charter. Grow your bank while capital floods in — then keep your nerve when the market panics and everyone bolts for the exit.</p>
+    <ul class="rules">
+      <li><span class="ri">🏛️</span><span class="rt"><b>Open branches</b> in the boom. Each one pays you every second.</span></li>
+      <li><span class="ri">💰</span><span class="rt"><b>Cash out</b> anytime — but a fee applies, and it spikes when everyone sells at once.</span></li>
+      <li><span class="ri">🛡️</span><span class="rt">Hold through the run and you're <b>paid by the panic</b>. That's the whole trick.</span></li>
+    </ul>
+    <button class="go" onclick="startGame()">Accept the charter</button>
+    <div class="maplink" onclick="openExplain()">Wait — what is this? Explain it simply</div>
+  </div>
+</div>
+
+<!-- EXPLAINER -->
+<div class="overlay" id="explainer" style="display:none">
+  <div class="explain">
+    <div class="top">
+      <div class="simtag">An economics simulation · idle / tycoon game</div>
+      <h1>What is this, really?</h1>
+      <p class="lead">A tiny game that lets you <em>feel</em> how a new kind of bank works — by running one yourself for two minutes.</p>
+    </div>
+
+    <div class="qa">
+      <div class="q"><span class="n">1</span> What am I playing?</div>
+      <div class="a">You're pretending to be a <b>bank</b>. You build little branches, and each branch makes you money every second — like a lemonade stand that keeps selling on its own. The more branches you have, the more you earn. It's a "watch your money grow" game, the kind people call an <b>idle</b> or <b>tycoon</b> game.</div>
+    </div>
+
+    <div class="qa">
+      <div class="q"><span class="n">2</span> What's the catch?</div>
+      <div class="a">To build a branch, you spend money — and that money is <b>gone for good</b> (it gets "burned"). That's on purpose. And halfway through, the game throws a <span class="bad">panic</span> at you: pretend customers all rush to pull their money out at once. This is called a <b>bank run</b>, and it's the scary thing that can break real banks.</div>
+    </div>
+
+    <div class="qa">
+      <div class="q"><span class="n">3</span> So what's the big choice?</div>
+      <div class="a">When the panic hits, you can grab your money and run with everyone else — but leaving costs a <span class="bad">fee that gets huge</span> when everybody leaves at the same time. Or you can <em>stay calm and hold</em>. If you hold, you actually get <em>paid</em> from the fees that all the panickers are paying. So the surprise lesson is: <b>the person who panics loses, and the person who stays patient wins.</b></div>
+    </div>
+
+    <div class="qa">
+      <div class="q"><span class="n">4</span> What kind of simulation is it?</div>
+      <div class="a">It's a <b>behavior simulation</b> — it's not showing you exact prices or real numbers. It's showing you the <em>incentives</em>: what the smart move is, and how the system nudges everyone toward it. Think of it like a driving-school simulator: not a real car, but real enough to teach you the rules of the road.</div>
+    </div>
+
+    <div class="tieback">
+      <div class="h">How this ties to the actual project</div>
+      <p>STANDARD is a real crypto project — a <b>"central bank" that runs entirely on code</b>, with no people in charge. The whitepaper describes exactly the machine you just played: you hold a <b>charter</b> (your bank), you open <b>branches</b> that earn the coin, building them <b>burns</b> the coin, and when people try to cash out all at once, a rising <b>exit fee</b> punishes the panic and rewards whoever stays.</p>
+      <p>The whole point of STANDARD is that <b>it defends itself</b>: when money flees, the code automatically makes leaving expensive and makes staying pay. This game is the fastest way to <em>get</em> that idea without reading a single page of the whitepaper.</p>
+    </div>
+
+    <button class="go" onclick="closeExplain()">Got it — let me play</button>
+    <div class="maplink" onclick="closeExplain()" style="text-align:center;display:block;">Back</div>
+  </div>
+</div>
+
+<div class="overlay" id="outro" style="display:none">
+  <div class="panel">
+    <div class="pill" id="outPill"></div>
+    <div class="scoreline num" id="outScore">0</div>
+    <div class="scoretag">final standing</div>
+    <h1 id="outTitle" style="font-size:30px;"></h1>
+    <p id="outLesson"></p>
+    <button class="go" onclick="location.reload()">Play again</button>
+    <div class="maplink" onclick="toggleMap()">How does this map to the whitepaper?</div>
+    <div id="mapText" style="display:none;text-align:left;margin-top:16px;font-size:12.5px;color:var(--dim);line-height:1.6;background:var(--vault);border:1px solid var(--line);border-radius:10px;padding:14px 16px;"></div>
+  </div>
+</div>
+
+<script>
+const G={cash:120,branches:1,day:1,growCost:100,running:false,crowd:0,vault:0,tick:0,ended:false,held:true,cashedInRun:0};
+const el=id=>document.getElementById(id);
+const fmt=n=>Math.round(n).toLocaleString("en-US");
+let loop,tipTimer;
+el("charterNo").textContent=String(100+Math.floor(Math.random()*900));
+
+function startGame(){el("intro").style.display="none";renderBranches(true);update();loop=setInterval(tickLogic,100);setTimeout(startRun,20000);}
+
+function coin(txt,color){const box=el("vaultbox");const c=document.createElement("div");c.className="coin";c.textContent=txt;c.style.color=color;
+  c.style.left=(28+Math.random()*44)+"%";c.style.top=(38+Math.random()*22)+"%";box.appendChild(c);setTimeout(()=>c.remove(),1100);}
+
+function renderBranches(init){const wrap=el("branches");
+  if(G.branches===0){wrap.innerHTML='<div class="empty">— vacant —</div>';return;}
+  if(init||wrap.querySelector(".empty"))wrap.innerHTML="";
+  const have=[...wrap.querySelectorAll(".branch")].length;
+  if(G.branches>have){for(let i=have;i<G.branches;i++){const d=document.createElement("div");d.className="branch";
+    d.innerHTML='<div class="roof"></div><div class="body"><div class="cols"></div><div class="mark">$</div></div>';wrap.appendChild(d);}}
+  else if(G.branches<have){const nodes=wrap.querySelectorAll(".branch");
+    for(let i=have-1;i>=G.branches;i--){const n=nodes[i];n.className="branch dying";setTimeout(()=>n.remove(),540);}}}
+
+function pulseBranches(){document.querySelectorAll(".branch").forEach((b,i)=>{setTimeout(()=>{b.classList.add("pulse");setTimeout(()=>b.classList.remove("pulse"),800);},i*40);});}
+
+function grow(){if(G.ended)return;
+  if(G.branches>=10){flashTip("Ten branches is the cap — one charter, ten branches. 🏛️","var(--gold)");nudge(el("growBtn"));return;}
+  if(G.cash<G.growCost){flashTip("Not enough yet. Let your branches earn, then build.","var(--alarm)");nudge(el("growBtn"));return;}
+  G.cash-=G.growCost;G.branches++;G.growCost=Math.round(G.growCost*1.32);
+  coin("🏛️ +1","var(--mint)");renderBranches();bumpBal();
+  if(G.branches===2)flashTip("The cash you spent is <b>burned forever</b> — that's how expanding shrinks the supply.","var(--mint)");
+  else if(G.branches===5)flashTip("Five branches, five income streams. Compounding while it's sunny.","var(--mint)");
+  else if(G.branches===10)flashTip("Maxed out. Now it's about <b>keeping</b> what you built.","var(--gold)");
+  update();}
+
+function cashOut(){if(G.ended||G.branches<=0)return;
+  const fee=0.02+0.68*G.crowd*G.crowd;const share=G.vault/Math.max(G.branches,1);const gross=share+45;const net=gross*(1-fee);
+  G.cash+=net;G.vault-=share;G.branches--;if(G.running){G.held=false;G.cashedInRun++;}
+  renderBranches();bumpBal();coin("+"+fmt(net),fee>0.28?"var(--alarm)":"var(--gold)");
+  if(G.running&&fee>0.28)flashTip("You paid a <b>"+Math.round(fee*100)+"% exit fee</b> to sell into the panic. Ouch.","var(--alarm)");
+  else if(!G.running)flashTip("Cashed out one branch. Fee's tiny — the market's calm.","var(--gold)");
+  if(G.branches===0)endGame();update();}
+
+function startRun(){if(G.ended)return;G.running=true;el("stage").classList.add("shake");el("vaultbox").classList.add("runflash");
+  document.body.style.background="radial-gradient(120% 80% at 50% -10%, #2a1410 0%, #0a0b0d 55%)";
+  setTimeout(()=>{el("stage").classList.remove("shake");el("vaultbox").classList.remove("runflash");},800);
+  flashTip("🚨 <b>BANK RUN.</b> Everyone's rushing the exit. Dump with them… or hold your nerve?","var(--alarm)");
+  setTimeout(()=>{if(!G.ended)endGame();},28000);}
+
+function tickLogic(){if(G.ended)return;G.tick++;
+  if(G.running){G.crowd=Math.min(1,G.crowd+0.012);if(G.crowd>=0.82)G.crowd=Math.max(0.25,G.crowd-0.004);}
+  const marketMult=G.running?0.15:1.0;const earned=G.branches*7*marketMult;G.vault+=earned;
+  if(!G.running){G.cash+=earned*0.7;}
+  else{const loyalty=G.branches*G.crowd*3.2;G.cash+=loyalty;if(loyalty>0&&G.tick%7===0&&G.branches>0)coin("+"+fmt(loyalty),"var(--mint)");}
+  if(G.tick%18===0)G.day++;
+  if(G.tick%8===0&&!G.running&&G.branches>0)pulseBranches();
+  update();}
+
+function flashTip(msg,color){const t=el("tip");t.innerHTML=msg;t.style.color=color||"var(--dim)";clearTimeout(tipTimer);tipTimer=setTimeout(()=>t.style.color="var(--dim)",4200);}
+function nudge(n){n.classList.remove("shake");void n.offsetWidth;n.classList.add("shake");setTimeout(()=>n.classList.remove("shake"),450);}
+function bumpBal(){const b=el("cash");b.classList.remove("bump");void b.offsetWidth;b.classList.add("bump");}
+
+function setWeather(){const dot=el("wdot"),tx=el("wtext"),w=el("weather");
+  if(!G.running){dot.style.color="var(--mint)";w.style.background="linear-gradient(90deg,rgba(63,183,148,.12),var(--vault))";w.style.borderColor="rgba(63,183,148,.35)";
+    tx.innerHTML="<b>Boom.</b> Capital flowing in — branches earn full rate. Build now.";}
+  else{dot.style.color="var(--alarm)";w.style.background="linear-gradient(90deg,rgba(229,72,47,.14),var(--vault))";w.style.borderColor="rgba(229,72,47,.4)";
+    tx.innerHTML=G.crowd>0.5?"<b>Run peaking.</b> Exit fees brutal — every seller pays the holders.":"<b>Capital fleeing.</b> Earnings cut, exits getting pricey.";}}
+
+function update(){el("cash").innerHTML='<span class="cur">$</span>'+fmt(G.cash);el("branchCount").textContent=G.branches;el("day").textContent=String(G.day).padStart(2,"0");
+  el("growCost").textContent="cost $"+fmt(G.growCost);
+  const rp=Math.min(100,(G.vault/(G.branches*300+400))*100);el("reserveFill").style.width=rp+"%";el("reservePct").textContent=Math.round(rp)+"%";
+  el("growBtn").disabled=(G.branches>=10)||(G.cash<G.growCost);el("cashBtn").disabled=G.branches<=0;
+  if(G.running){const fee=Math.round((0.02+0.68*G.crowd*G.crowd)*100);el("cashInfo").innerHTML="fee <b>"+fee+"%</b>";el("rateLine").textContent="issuance cut — defend your position";}
+  else{el("cashInfo").textContent="retire a branch";el("rateLine").textContent="earning while branches stand";}
+  setWeather();}
+
+function endGame(){if(G.ended)return;G.ended=true;clearInterval(loop);
+  document.body.style.background="radial-gradient(120% 80% at 50% -10%, #23200f 0%, #0a0b0d 55%)";
+  const score=Math.round(G.cash+G.vault*0.5+G.branches*90);let title,lesson,pill,pc;
+  if(G.branches>=4&&G.held){title="You understood the machine.";pill="PATIENT BANKER";pc="var(--mint-deep)";
+    lesson="You built in the boom and <b>held through the run</b>. STANDARD taxes the panic-sellers and pays that money to whoever stays — so calm hands win. You never flinched.";}
+  else if(G.branches===0){title="You ran with the crowd.";pill="PANIC SELLER";pc="var(--alarm-deep)";
+    lesson="You sold everything mid-run and paid enormous fees to do it. Here, exiting first isn't the safe move — it's the <b>most expensive</b> one. Half of what you paid went to the bankers who held.";}
+  else if(G.cashedInRun>0){title="You wobbled, but survived.";pill="SHAKEN HAND";pc="var(--gold-deep)";
+    lesson="You panicked a little and paid for it, but kept a foothold. The lesson: the bank <b>tightens</b> when capital leaves — it doesn't unwind. Holding beats fleeing.";}
+  else{title="Steady, banker.";pill="SURVIVOR";pc="var(--gold-deep)";
+    lesson="You held the line. Underneath the game: inflows loosen the bank and make expansion cheap; outflows tighten it and tax the exits. <b>The bank defends itself.</b>";}
+  el("outPill").textContent=pill;el("outPill").style.background=pc;el("outPill").style.color="#fff";
+  el("outTitle").innerHTML=title;el("outScore").textContent=fmt(score);el("outLesson").innerHTML=lesson;
+  el("mapText").innerHTML=
+    "<b style='color:var(--gold)'>🏛️ Open branch</b> = an expansion license, paid in $STANDARD and <b>100% burned</b> — expanding literally shrinks supply (§7, §13).<br><br>"+
+    "<b style='color:var(--gold)'>Per-second earnings</b> = daily issuance streamed pro-rata to every branch (§5).<br><br>"+
+    "<b style='color:var(--gold)'>Boom vs Run</b> = the expansion and contraction regimes; issuance is cut the moment capital leaves (§5).<br><br>"+
+    "<b style='color:var(--gold)'>The exit fee</b> = the resolution fee, which rises with the square of how much of the bank is leaving at once (§9.1).<br><br>"+
+    "<b style='color:var(--gold)'>Getting paid to hold</b> = half of every exit fee is redistributed to the bankers who stayed (§9). That's what inverts the bank run.";
+  el("outro").style.display="flex";}
+function toggleMap(){const m=el("mapText");m.style.display=m.style.display==="none"?"block":"none";}
+function openExplain(){el("intro").style.display="none";el("explainer").style.display="flex";el("explainer").scrollTop=0;}
+function closeExplain(){el("explainer").style.display="none";el("intro").style.display="flex";}
+</script>
+</body>
+</html>
